@@ -1,0 +1,19 @@
+[
+  {
+    "id": "eval-001",
+    "story_id": "story-obsidian-crown",
+    "query": "Where did Lord Matthew fall in battle?",
+    "expected_chapter": 2,
+    "expected_keywords": ["river", "matthew", "arrow", "currents"],
+    "ground_truth_answer": "Lord Matthew fell into the icy currents of the Silver River after being struck by an arrow in Chapter 2."
+  },
+  {
+    "id": "eval-002",
+    "story_id": "story-obsidian-crown",
+    "query": "Who took the scouts to secure the valley bridge in Chapter 1?",
+    "expected_chapter": 1,
+    "expected_keywords": ["matthew", "bridge", "scouts", "kaelen"],
+    "ground_truth_answer": "Kaelen ordered Lord Matthew to take the scouts and secure the valley bridge."
+  }
+]
+

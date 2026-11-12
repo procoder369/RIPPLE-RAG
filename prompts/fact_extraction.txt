@@ -1,0 +1,22 @@
+You are a narrative fact extraction system.
+Extract atomic, verifiable story facts from the following story chapter chunk.
+
+Focus on:
+- Major character actions and decisions
+- Status changes (wounds, death, imprisonment, promotions)
+- Item acquisitions and losses
+- Relationship changes (alliances, betrayals, secrets revealed)
+
+Chunk Text (Chapter {chapter_index}):
+{chunk_text}
+
+Output JSON format:
+[
+  {{
+    "entity_name": "Character or Location name",
+    "statement": "Concise factual statement in past tense",
+    "category": "state_change",
+    "source_quote": "Exact sentence from text",
+    "confidence": 0.95
+  }}
+]

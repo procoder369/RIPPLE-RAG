@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: ripplerag-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: ripplerag
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  ripplerag-api:
+    build: .
+    container_name: ripplerag-api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgrespassword@db:5432/ripplerag
+      - ENVIRONMENT=production
+      - DEBUG=False
+      - SERVICE_AUTH_TOKEN=dev-secret-token
+      - LLM_PROVIDER=mock
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+
