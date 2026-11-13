@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     USE_LOCAL_EMBEDDING_FALLBACK: bool = True
 
     # LLM Settings
-    LLM_PROVIDER: str = "mock"  # "mock", "anthropic", "openai", "gemini", "ollama"
+    LLM_PROVIDER: str = "ollama"  # "mock", "anthropic", "openai", "gemini", "ollama"
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_BASE_URL: Optional[str] = None  # e.g. "http://localhost:11434/v1" for Ollama or LM Studio
     ANTHROPIC_API_KEY: Optional[str] = None
