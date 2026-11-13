@@ -12,14 +12,14 @@ def verify_service_token(
     credentials: HTTPAuthorizationCredentials = Depends(security_bearer),
 ) -> bool:
     """Verifies that requests from the main application contain the valid service token."""
-    # In development mode with empty or default secret, allow transparent local calls
-    if settings.ENVIRONMENT == "development" and not settings.SERVICE_AUTH_TOKEN:
+    # In development mode, allow transparent access when testing without headers
+    if settings.ENVIRONMENT == "development" and not credentials:
         return True
 
     if not credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing Authorization header",
+            detail="Missing Authorization header (Bearer token required)",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

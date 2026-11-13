@@ -27,9 +27,38 @@ class SceneAwareChunker:
             scenes = [text.strip()]
         return scenes
 
+    def _split_long_paragraph(self, para: str) -> List[str]:
+        """Splits an oversized paragraph into sentence clusters within word limits."""
+        sentences = re.split(r"(?<=[.!?])\s+", para)
+        sub_paras: List[str] = []
+        cur_sentences: List[str] = []
+        cur_words = 0
+
+        for sent in sentences:
+            sent_words = len(sent.split())
+            if cur_words + sent_words > self.max_chunk_words and cur_sentences:
+                sub_paras.append(" ".join(cur_sentences))
+                cur_sentences = [sent]
+                cur_words = sent_words
+            else:
+                cur_sentences.append(sent)
+                cur_words += sent_words
+
+        if cur_sentences:
+            sub_paras.append(" ".join(cur_sentences))
+
+        return sub_paras if sub_paras else [para]
+
     def chunk_scene(self, scene_text: str, scene_idx: int) -> List[Dict[str, Any]]:
         """Splits a single scene into structured chunks respecting paragraph blocks."""
-        paragraphs = [p.strip() for p in scene_text.split("\n\n") if p.strip()]
+        raw_paragraphs = [p.strip() for p in scene_text.split("\n\n") if p.strip()]
+        paragraphs: List[str] = []
+        for p in raw_paragraphs:
+            if len(p.split()) > self.max_chunk_words:
+                paragraphs.extend(self._split_long_paragraph(p))
+            else:
+                paragraphs.append(p)
+
         chunks: List[Dict[str, Any]] = []
 
         current_paragraphs: List[str] = []

@@ -29,12 +29,18 @@ class Settings(BaseSettings):
     USE_LOCAL_EMBEDDING_FALLBACK: bool = True
 
     # LLM Settings
-    LLM_PROVIDER: str = "mock"  # "mock", "anthropic", "openai", "gemini"
+    LLM_PROVIDER: str = "mock"  # "mock", "anthropic", "openai", "gemini", "ollama"
     OPENAI_API_KEY: Optional[str] = None
+    OPENAI_BASE_URL: Optional[str] = None  # e.g. "http://localhost:11434/v1" for Ollama or LM Studio
     ANTHROPIC_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
     LLM_MODEL: str = "claude-3-5-sonnet-20241022"
     LLM_TEMPERATURE: float = 0.2
+
+    # Ollama Settings
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "llama3.2"  # or mistral, qwen2.5, phi3
+    OLLAMA_EMBED_MODEL: str = "all-minilm"  # or nomic-embed-text
 
     # Narrative Graph & Continuity
     MAX_GRAPH_DEPTH: int = 4

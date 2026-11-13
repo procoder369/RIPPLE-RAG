@@ -50,11 +50,17 @@ class ContradictionDetector:
         llm_response = self.llm_client.generate(prompt)
 
         try:
-            parsed = json.loads(llm_response)
-            if parsed.get("has_contradiction"):
-                violations.extend(parsed.get("violations", []))
-        except Exception:
-            pass
+            # Extract JSON object substring if model includes markdown or preamble
+            clean_resp = llm_response.strip()
+            start_idx = clean_resp.find("{")
+            end_idx = clean_resp.rfind("}") + 1
+            if start_idx != -1 and end_idx > start_idx:
+                parsed = json.loads(clean_resp[start_idx:end_idx])
+                if parsed.get("has_contradiction"):
+                    violations.extend(parsed.get("violations", []))
+        except Exception as exc:
+            from app.core.logging import logger
+            logger.warning(f"Could not parse LLM continuity response JSON: {exc}")
 
         # Persist violations
         for v in violations:
