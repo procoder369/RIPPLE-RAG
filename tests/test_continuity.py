@@ -63,3 +63,40 @@ def test_character_death_rule(test_db):
     )
     assert flashback_result is None
 
+
+def test_physical_impairment_rule(test_db):
+    story = Story(id="test-story-2", title="Combat Story")
+    test_db.add(story)
+    test_db.commit()
+
+    knight = CanonEntity(
+        story_id="test-story-2",
+        name="Sir Justin",
+        entity_type="character",
+    )
+    test_db.add(knight)
+    test_db.commit()
+
+    # Justin lost his right arm in Chapter 1
+    injury_fact = CanonFact(
+        story_id="test-story-2",
+        entity_id=knight.id,
+        statement="Sir Justin had his right arm severed in battle",
+        timeline_order=1,
+        status="APPROVED",
+    )
+    test_db.add(injury_fact)
+    test_db.commit()
+
+    # Attempt action requiring both hands in Chapter 3
+    violation = DeterministicRulesEngine.check_character_state(
+        db=test_db,
+        story_id="test-story-2",
+        character_name="Sir Justin",
+        target_chapter=3,
+        attempted_action="Sir Justin swung the heavy greatsword with both hands",
+    )
+    assert violation is not None
+    assert violation["violation_type"] == "PHYSICAL_IMPAIRMENT_CONTRADICTION"
+    assert "impairment" in violation["description"].lower()
+
