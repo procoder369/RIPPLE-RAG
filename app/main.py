@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.core.logging import logger
 from app.database.connection import init_db
-from app.api.routes import health, indexing, query, continuity, canon, ripple
+from app.api.routes import health, indexing, query, continuity, canon, ripple, workspace, versioning
 
 settings = get_settings()
 
@@ -45,6 +45,8 @@ app.include_router(query.router, prefix=settings.API_V1_PREFIX)
 app.include_router(continuity.router, prefix=settings.API_V1_PREFIX)
 app.include_router(canon.router, prefix=settings.API_V1_PREFIX)
 app.include_router(ripple.router, prefix=settings.API_V1_PREFIX)
+app.include_router(workspace.router, prefix=settings.API_V1_PREFIX)
+app.include_router(versioning.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/")

@@ -34,6 +34,7 @@ class Story(Base):
     chapters = relationship("Chapter", back_populates="story", cascade="all, delete-orphan")
     entities = relationship("CanonEntity", back_populates="story", cascade="all, delete-orphan")
     facts = relationship("CanonFact", back_populates="story", cascade="all, delete-orphan")
+    commits = relationship("StoryCommit", back_populates="story", cascade="all, delete-orphan")
 
 
 class Chapter(Base):
@@ -50,6 +51,30 @@ class Chapter(Base):
 
     story = relationship("Story", back_populates="chapters")
     chunks = relationship("StoryChunk", back_populates="chapter", cascade="all, delete-orphan")
+    commits = relationship("StoryCommit", back_populates="chapter", cascade="all, delete-orphan")
+
+
+class StoryCommit(Base):
+    """Represents a version control commit snapshot of a story/chapter edit."""
+    __tablename__ = "story_commits"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    commit_hash = Column(String(40), nullable=False, index=True)
+    story_id = Column(String(36), ForeignKey("stories.id"), nullable=False)
+    chapter_id = Column(String(36), ForeignKey("chapters.id"), nullable=True)
+    author = Column(String(255), default="Author")
+    message = Column(String(500), nullable=False)
+    branch = Column(String(100), default="main")
+    # Full snapshot or text content at this commit point
+    snapshot_text = Column(Text, nullable=False)
+    # Unified diff string compared to previous version
+    diff_summary = Column(Text, nullable=True)
+    parent_commit_hash = Column(String(40), nullable=True)
+    metadata_json = Column(JSON, default=dict)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
+    story = relationship("Story", back_populates="commits")
+    chapter = relationship("Chapter", back_populates="commits")
 
 
 class StoryChunk(Base):
