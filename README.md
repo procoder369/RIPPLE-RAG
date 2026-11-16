@@ -190,4 +190,4 @@ python evaluation/generation_metrics.py
 
 ## License
 
-Add your license here.
+http://www.apache.org/licenses/LICENSE-2.0
